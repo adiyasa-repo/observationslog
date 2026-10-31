@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="da">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; connect-src 'self'; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="referrer" content="no-referrer">
+  <title>Observationslog</title>
+  <meta name="description" content="Notér observationer med tidsstempel og find spild i arbejdsgange. Alt gemmes lokalt i din browser – intet sendes nogen steder.">
+  <meta name="theme-color" content="#f6f5f1" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#121412" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="styles.css">
+  <script src="theme.js"></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#main">Spring til indhold</a>
+
+  <header class="topbar">
+    <div class="shell topbar-inner">
+      <a href="#/" class="brand" aria-label="Observationslog – til sessioner">
+        <img src="icon.svg" alt="" width="26" height="26">
+        <span class="brand-name">Observationslog</span>
+      </a>
+      <nav class="nav" aria-label="Hovedmenu">
+        <a href="#/" data-nav="sessions">Sessioner</a>
+        <a href="#/overblik" data-nav="overview">Overblik</a>
+      </nav>
+      <div class="topbar-actions">
+        <button type="button" class="privacy-pill" id="privacyBtn" title="Om dine data">
+          <span class="ic-slot" data-icon="lock"></span><span class="privacy-text">Kun på denne computer</span>
+        </button>
+        <button type="button" class="icon-btn" id="themeBtn" aria-label="Skift tema"></button>
+        <div class="menu-wrap">
+          <button type="button" class="icon-btn" id="menuBtn" aria-haspopup="menu" aria-expanded="false" aria-label="Flere handlinger"></button>
+          <div class="menu" id="menu" role="menu" hidden>
+            <button role="menuitem" data-menu="export-json"><span class="ic-slot" data-icon="download"></span>Eksportér backup (JSON)</button>
+            <button role="menuitem" data-menu="import-json"><span class="ic-slot" data-icon="upload"></span>Importér backup…</button>
+            <button role="menuitem" data-menu="export-csv-all"><span class="ic-slot" data-icon="file"></span>Eksportér alt til CSV</button>
+            <hr>
+            <button role="menuitem" data-menu="tags"><span class="ic-slot" data-icon="tag"></span>Administrér tags</button>
+            <button role="menuitem" data-menu="help"><span class="ic-slot" data-icon="keyboard"></span>Tastaturgenveje <kbd>?</kbd></button>
+            <button role="menuitem" data-menu="privacy"><span class="ic-slot" data-icon="lock"></span>Om dine data</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="shell" tabindex="-1">
+    <section class="view" id="view-sessions" aria-label="Sessioner" hidden></section>
+    <section class="view" id="view-session" aria-label="Session" hidden></section>
+    <section class="view" id="view-overview" aria-label="Overblik" hidden></section>
+    <div class="boot" id="boot">Indlæser…</div>
+  </main>
+
+  <footer class="shell footer">
+    <p><span class="ic-slot" data-icon="lock"></span> Alt gemmes lokalt i din browser og forlader aldrig din computer. Ingen server, ingen login, ingen sporing.</p>
+    <p class="footer-warn">Rydder du browserdata, forsvinder noterne. <button type="button" class="link" data-menu="export-json">Eksportér en backup</button> jævnligt.</p>
+    <p>Åben kildekode: <a class="link" href="https://github.com/adiyasa-repo/observationslog" target="_blank" rel="noopener noreferrer">github.com/adiyasa-repo/observationslog</a> – se selv, at intet sendes nogen steder.</p>
+  </footer>
+
+  <!-- Notefeltet flyttes ind i sessionsvisningen af app.js -->
+  <div class="composer" id="composer" data-state="closed" hidden>
+    <button type="button" class="composer-bar" id="composerBar">
+      <span class="composer-plus"><span class="ic-slot" data-icon="plus"></span></span>
+      <span class="composer-bar-text">Ny observation</span>
+      <span class="composer-bar-keys"><kbd>N</kbd></span>
+    </button>
+    <div class="composer-panel" id="composerPanel" role="group" aria-label="Ny note">
+      <div class="composer-top">
+        <span class="rec-dot" aria-hidden="true"></span>
+        <time class="composer-time" id="cTime">--:--:--</time>
+        <span class="composer-ago" id="cAgo"></span>
+        <span class="spacer"></span>
+        <span class="composer-hint"><kbd>↵</kbd> gem <kbd>⇧↵</kbd> ny linje <kbd>Esc</kbd> annullér</span>
+      </div>
+      <textarea id="cText" rows="1" placeholder="Hvad sker der? Skriv # for tags" aria-label="Note" spellcheck="true"></textarea>
+      <div class="chips" id="cTags" role="group" aria-label="Tags – Alt+1-9"></div>
+      <div class="composer-bottom">
+        <label class="source-field">
+          <span class="ic-slot" data-icon="db"></span>
+          <input id="cSource" type="text" placeholder="Datakilde (valgfri) – system eller fil" aria-label="Datakilde" autocomplete="off" spellcheck="false">
+        </label>
+        <div class="composer-buttons">
+          <button type="button" class="btn ghost" id="cCancel">Annullér</button>
+          <button type="button" class="btn primary" id="cSave">Gem</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toasts" id="toasts" aria-live="polite"></div>
+  <input type="file" id="importFile" accept=".json,application/json" hidden>
+</body>
+</html>

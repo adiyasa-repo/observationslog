@@ -1,0 +1,14 @@
+{
+  "name": "Observationslog",
+  "short_name": "Obslog",
+  "description": "Notér observationer med tidsstempel og find spild i arbejdsgange. Alt gemmes lokalt.",
+  "lang": "da",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f6f5f1",
+  "theme_color": "#2c6e5b",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}
